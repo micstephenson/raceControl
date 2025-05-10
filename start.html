@@ -1,1 +1,97 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrideSync</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a class="navbar__name">
+                StrideSync
+            </a>
+        </div>
+    </nav>
+
+    <section id="main-page">
+        <!-- runner button -->
+        <div class="position_button">
+            <button class="runner__button">
+                <a><img src="images/runningMan.png" alt="main__img"></a> 
+            </button>
+        <!-- Participant Inputs -->
+        <form>
+            <div class="input-container">
+                <h1>Participant Details</h1>
+                <p id="selectFirstLast">Please select a participant first</p>
+                <input type="text" id="first_name" class="name" placeholder="Enter your first name" required>
+                <input type="text" id="last_name" class="name" placeholder="Enter your last name" required>
+                <button id="submit_name">Submit</button>
+                <div id="participants-container">
+                    <h1>Participants</h1>
+                    <div id="participant-list"></div>
+                </div>
+            </div>
+        </form>
+        <!-- spectator button -->
+            <button class="spectator__button">
+                <a><img src="images/eye.png" alt="main__img"></a>
+            </button>
+        </div>
+    </section>
+
+<!-- Runner Page -->
+    <section id="runner-page">
+        <div class="stopwatch">
+            <div class="time" id="display">00:00:00</div>
+         </div>
+    
+         <!-- Submit -->
+         <div class="submittion_container">
+            <!-- Submittion button -->
+            <div class="submit">
+                <button id="submit-button">Racer Passed</button>
+                <button id="upload-button">Upload Results</button>
+            </div>
+             <!-- Laps -->
+            <div id="lap-list-container">
+
+            </div>
+         </div>
+
+         <!-- Participant List Popup -->
+          <div class="overlay" id="overlay"></div>></div>
+         <div id="participant-list-popup" class="popup">
+            <div class="popup-content">
+
+                <!-- close popup -->
+                <button class="close-popup">x</button>
+
+                <h2>Participants</h2>
+                <div id="participants-form">
+                    <label for="search">search participant number</label>
+                    <input type="text" id="search-participants"><br>
+                    <ul id="participant-list-container" class="scrollable-container">
+
+                    </ul>
+                    <!-- <button type="submit" class="select-participant-button">Select Participant</button> -->
+                </div>
+            </div>
+         </div>
+
+    </section>
+
+
+
+<!-- Spectator Page -->
+    <section id="spectator-page">
+
+    </section>
+    
+    <script src="index.js"></script>
+
+</body>
+</html>

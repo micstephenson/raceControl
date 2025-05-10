@@ -4,34 +4,26 @@
     document.querySelector('.runner__button').addEventListener('click', (event) => {
         event.preventDefault(); // Prevent the default behavior of the <a> tag
     
-        // Hide the main page
-        document.getElementById('main-page').style.display = 'none';
-    
-        // Show the runner page
-        document.getElementById('runner-page').style.display = 'block';
+        switchPages('main', 'runner')
     });
     
     // Runner to main
     document.querySelector('.navbar__name').addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent the default behavior of the <a> tag
+        event.preventDefault(); 
     
-        // Hide the runner page
-        document.getElementById('runner-page').style.display = 'none';
-    
-        // Show the main page
-        document.getElementById('main-page').style.display = 'block';
+        switchPages('runner', 'main')
     });
     // Main to spectator
     document.querySelector('.spectator__button').addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent the default behavior of the <a> tag
+        event.preventDefault(); 
     
-        // Hide the main page
-        document.getElementById('main-page').style.display = 'none';
-    
-        // Show the runner page
-        document.getElementById('spectator-page').style.display = 'block';
+        switchPages('main', 'spectator')
     });
     
+    function switchPages(currentPage, nextPage){ 
+        document.getElementById(`${currentPage}-page`).style.display = 'none';
+        document.getElementById(`${nextPage}-page`).style.display = 'block';
+    }
     
     // start page*/
     // ------------------------------------------------------------------------------------------------------
@@ -55,13 +47,13 @@
     
     
         if (first_name == '' || last_name === ''){
-            alert('Please enter both first and last name. ');
+            selectFirstLast.classList.add('active');
             return;
         } else {
+            selectFirstLast.classList.remove('active');
             const full_name = `${first_name} ${last_name}`;
         
-        // Generate a random number
-            let randomNum;
+            let randomNum; // Generate a random number
             const existingNumbers = participants.map((participant) => participant.racerNum);
             do {
                 randomNum = Math.floor(Math.random() * 900) + 100;
@@ -105,12 +97,6 @@
             document.getElementById('last_name').value = '';
         }
     });
-    
-    // const partName = localStorage.getItem('participantName');
-    // const number = localStorage.getItem('participantNumber');
-    
-    // document.getElementById('nameDisplay').innerText = 'Name: ' + partName;
-    // document.getElementById('numberDisplay').innerText = 'Number: ' + number; 
     
     
     // Runner 
@@ -167,7 +153,7 @@
         lapDiv.setAttribute('data-position', `${position}`); //set data position
         lapDiv.innerHTML = `
         <p class="lap-time">Position: ${position}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${lapTime} </p>
-        <p class="participant-selection">*No Runner Assigned*</p>
+        <p class="participant-selection" data-position="${position}">*No Runner Assigned*</p>
         <button class="select-time" data-position="${position}"> Select </button>
         `;
         lapContainer.appendChild(lapDiv);
@@ -203,15 +189,20 @@
         });
     }
     
+    let buttonPosition = null;
+    let lapEntry = null;
     // show popup
     document.addEventListener('click', (event) => {
         if (event.target.classList.contains('select-time')) {
             event.preventDefault();
             
+            buttonPosition = event.target.getAttribute('data-position');
+            lapEntry = document.querySelector(`.lap-entry[data-position="${buttonPosition}"]`);
+            console.log(`position: ${buttonPosition}, lapEntry: ${lapEntry}`);
+    
             const participantListPopup = document.getElementById('participant-list-popup');
             const overlay = document.getElementById('overlay');
     
-            // populate participant list
             populateParticipantList();
     
             // Show the popup
@@ -232,7 +223,7 @@
     let selectedParticipant = null;
     document.addEventListener('click', (event) => {
         if (event.target.classList.contains('participant-selection-button')) {
-            event.preventDefault(); // Prevent the default form submission behavior
+            event.preventDefault(); 
     
             if (event.target.classList.contains('selected')){
                 event.target.classList.remove('selected');
@@ -246,18 +237,18 @@
     
             // Store the selected participant's details
             const buttonText = event.target.textContent.trim();
-            const [racerNum, ...nameParts] = buttonText.split(/\s+/); // Split by whitespace
-            const participantName = nameParts.join(' '); // Join the remaining parts as the name
+            const [racerNum, ...nameParts] = buttonText.split(/\s+/); 
+            const participantName = nameParts.join(' '); 
             selectedParticipant = { racerNum, participantName };
     
             if (selectedParticipant) {
-                const participantSelectionElement = document.querySelector('.participant-selection');
-                if (participantSelectionElement) {
+                const participantSelectionElement = document.querySelector(`.participant-selection[data-position="${buttonPosition}"]`);
+                if (participantSelectionElement && selectedParticipant) {
                     participantSelectionElement.textContent = `${selectedParticipant.racerNum}              ${selectedParticipant.participantName}`;
                 }
     
-                // update results array
-                const lastResultIndex = results.length - 1;
+                // update results array 
+                const lastResultIndex = buttonPosition - 1;
                 if (lastResultIndex >= 0) {
                     results[lastResultIndex].racerName = selectedParticipant.participantName;
                     results[lastResultIndex].racerNum = selectedParticipant.racerNum;
@@ -273,7 +264,7 @@
                 participantListPopup.classList.remove('active');
                 overlay.classList.remove('active');
     
-                // Clear the selected participant
+                // Clear the selected participant/lap entry
                 selectedParticipant = null;
             } else {
                 alert('Please select a participant first.');
@@ -281,37 +272,21 @@
         }
     });
     
-    // document.addEventListener('click', (event) => {
-    //     if (event.target.classList.contains('participant-selection-button')) {
-    //         event.preventDefault();
+    //search bar
+    function filterParticipants(event) {
+        const searchValue = event.target.value.trim();
+        const participantButtons = document.querySelectorAll('.participant-selection-button');
     
-    //         if (selectedParticipant) {
-    //             const participantSelectionElement = document.querySelector('.participant-selection');
-    //             if (participantSelectionElement) {
-    //                 participantSelectionElement.textContent = `${selectedParticipant.racerNum}              ${selectedParticipant.participantName}`;
-    //             }
+        participantButtons.forEach((button) => {
+            const buttonText = button.textContent.trim();
+            const [racerNum] = buttonText.split(/\s+/);
     
-    //             // update results array
-    //             const lastResultIndex = results.length - 1;
-    //             if (lastResultIndex >= 0) {
-    //                 results[lastResultIndex].racerName = selectedParticipant.participantName;
-    //                 results[lastResultIndex].racerNum = selectedParticipant.racerNum;
-    //             }
-    //             console.log(results);
+            if (searchValue === '' || racerNum.startsWith(searchValue)) {
+                button.style.display = 'block';
+            } else {
+                button.style.display = 'none';
+            }
+        });
+    }
     
-    //             // save results to local storage
-    //             localStorage.setItem("stored_results", JSON.stringify(results));
-    
-    //             // Hide the popup
-    //             const participantListPopup = document.getElementById('participant-list-popup');
-    //             const overlay = document.getElementById('overlay');
-    //             participantListPopup.classList.remove('active');
-    //             overlay.classList.remove('active');
-    
-    //             // Clear the selected participant
-    //             selectedParticipant = null;
-    //         } else {
-    //             alert('Please select a participant first.');
-    //         }
-    //     }
-    // });
+    document.getElementById('search-participants').addEventListener('input', filterParticipants);

@@ -143,6 +143,16 @@ button img:hover {
     color: white;
 }
 
+#selectFirstLast {
+    display: none;
+}
+
+#selectFirstLast.active {
+    display: block;
+    color: red;
+}
+
+
 #participants-container {
     display: block;
     margin-top: 20px;
@@ -192,7 +202,7 @@ button img:hover {
     position: relative;
     color: white;
     border: none;
-    border-radius: 25px; /* Rounded edges */
+    border-radius: 25px; 
     font-size: 5px;
     cursor: pointer;
 }
@@ -214,7 +224,7 @@ button img:hover {
     background-color: #4CAF50; 
     color: white;
     border: none;
-    border-radius: 25px; /* Rounded edges */
+    border-radius: 25px;
     font-size: 50px;
     cursor: pointer;
 }
@@ -231,6 +241,7 @@ button img:hover {
     padding: 10px;
     border-radius: 100px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: block;
 }
 
 .time {
