@@ -31,6 +31,9 @@
     const NoOfParticipants = [];
     const createParticipant = document.getElementById('submit_name');
     const participantListContainer = document.getElementById('participant-list')
+    const adminId = '365247';
+    
+    //
     
     //capitalise names
     function capFirstLetter(string){
@@ -108,11 +111,22 @@
     let isRunning = false;
     let position = 1;
     let lapTime = {};
-    const results = [];
+    let buttonPosition = null;
+    let lapEntry = null;
+    let selectedParticipant = null;
     
+    const results = [];
     const display = document.getElementById('display');
     const startButton = document.querySelector('.runner__button');
     const submitButton = document.getElementById('submit-button');
+    const uploadButton = document.getElementById('upload-button');
+    
+    startButton.addEventListener('click', startTimer);
+    submitButton.addEventListener('click', submitLap);
+    uploadButton.addEventListener('click', uploadResults);
+    document.addEventListener('click', showParticipantSelectorPopup);
+    document.addEventListener('click', showParticipantsInPopup);
+    document.getElementById('search-participants').addEventListener('input', filterParticipants);
     
     function updateDisplay() {
         const hours = Math.floor(seconds / 3600);
@@ -123,7 +137,7 @@
         display.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(millis).padStart(2, '0')}`;
     }
     
-    startButton.addEventListener('click', () => {
+    function startTimer(){
         if (!isRunning) {
             isRunning = true;
             timer = setInterval(() => {
@@ -135,17 +149,19 @@
                 updateDisplay();
             }, 10); // update every 10milliseconds
         }
-    });
+    }
     
-    submitButton.addEventListener('click', () => {
+    function submitLap(){
         const lapTime = display.textContent;
         const lapDiv = document.createElement('div');
         let lapContainer = document.getElementById('lap-list-container');
     
         if (!lapContainer) {
             lapContainer = document.createElement('div');
-            lapContainer.id = 'lap-list-container';
-            document.body.appendChild(lapContainer); // Append to the DOM
+            if (!lapContainer.id) {
+                lapContainer.id = 'spectator-lap-list-container';
+            }
+            document.body.appendChild(lapContainer); 
         }
     
         // create new lap entry
@@ -164,9 +180,7 @@
         localStorage.setItem("stored_results", JSON.stringify(results));
     
         position++; // Increment position for the next lap
-    });
-    
-     6
+    }
     // assign user to time POPUP
     
     // Create Participant list in popup
@@ -189,10 +203,8 @@
         });
     }
     
-    let buttonPosition = null;
-    let lapEntry = null;
     // show popup
-    document.addEventListener('click', (event) => {
+    function showParticipantSelectorPopup(event){
         if (event.target.classList.contains('select-time')) {
             event.preventDefault();
             
@@ -217,11 +229,10 @@
             participantListPopup.classList.remove('active');
             overlay.classList.remove('active');
         }
-    });
+    }
     
     // assign participant
-    let selectedParticipant = null;
-    document.addEventListener('click', (event) => {
+    function showParticipantsInPopup(event) {
         if (event.target.classList.contains('participant-selection-button')) {
             event.preventDefault(); 
     
@@ -267,10 +278,22 @@
                 // Clear the selected participant/lap entry
                 selectedParticipant = null;
             } else {
-                alert('Please select a participant first.');
+                console.log('Please select a participant first.');
             }
         }
-    });
+    }
+    
+    function uploadResults(){
+        storeResults();
+        //stop timer
+        if (isRunning) {
+            clearInterval(timer);
+            isRunning = false;
+            console.log('timer stopped')
+        } else {
+            console.log('timer is not running');
+        }
+    }
     
     //search bar
     function filterParticipants(event) {
@@ -289,4 +312,31 @@
         });
     }
     
-    document.getElementById('search-participants').addEventListener('input', filterParticipants);
+    // Store Results  
+    // ------------------------------------------------------------------------------------------------------
+     async function storeResults() {
+        const response = await fetch('results', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(results),
+        });
+    
+        if (response.ok) {
+            message.value = '';
+            const updatedResults = await response.json();
+            removeContentFrom(resultsList);
+            showMessages(updatedMessages, resultsList);
+        } else {
+            console.log('failed to upload results', response);
+        }
+     }
+    
+     async function loadResults() {
+        const response = await fetch('messages');
+        let results;
+        if (response.ok) {
+            results = await response.json();
+        } else {
+            results = ['failed to load results']
+        }
+     }

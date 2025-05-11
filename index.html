@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,16 +16,17 @@
     </nav>
 
     <section id="main-page">
+
         <!-- runner button -->
         <div class="position_button">
             <button class="runner__button">
-                <a><img src="images/runningMan.png" alt="main__img"></a> 
+                <a><img src="images/runningMan.png" alt="checkpoint_marshal"></a> 
             </button>
         <!-- Participant Inputs -->
         <form>
             <div class="input-container">
                 <h1>Participant Details</h1>
-                <p id="selectFirstLast">Please select a participant first</p>
+                <p id="selectFirstLast">Please Enter First AND Last Name</p>
                 <input type="text" id="first_name" class="name" placeholder="Enter your first name" required>
                 <input type="text" id="last_name" class="name" placeholder="Enter your last name" required>
                 <button id="submit_name">Submit</button>
@@ -39,6 +39,7 @@
         <!-- spectator button -->
             <button class="spectator__button">
                 <a><img src="images/eye.png" alt="main__img"></a>
+                
             </button>
         </div>
     </section>
@@ -63,7 +64,7 @@
          </div>
 
          <!-- Participant List Popup -->
-          <div class="overlay" id="overlay"></div>></div>
+          <div class="overlay" id="overlay"></div>
          <div id="participant-list-popup" class="popup">
             <div class="popup-content">
 
@@ -88,6 +89,10 @@
 
 <!-- Spectator Page -->
     <section id="spectator-page">
+        <div id="spectator-lap-list-container">
+
+
+        </div>
 
     </section>
     
