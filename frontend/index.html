@@ -23,7 +23,6 @@
                 <a><img src="images/runningMan.png" alt="checkpoint_marshal"></a> 
             </button>
         <!-- Participant Inputs -->
-        <form>
             <div class="input-container">
                 <h1>Participant Details</h1>
                 <p id="selectFirstLast">Please Enter First AND Last Name</p>
@@ -35,13 +34,24 @@
                     <div id="participant-list"></div>
                 </div>
             </div>
-        </form>
         <!-- spectator button -->
             <button class="spectator__button">
                 <a><img src="images/eye.png" alt="main__img"></a>
-                
+
             </button>
         </div>
+
+         <!-- Resume or Restart -->
+         <div id="resume-restat-popup" class="popup">
+                 <!-- close popup -->
+                 <button class="close-popup">x</button>
+ 
+                 <h2>You still have an active race</h2>
+                 <h2>Would you like to restart or resume the current race?</h2>
+                 <button id="resume-race">Resume</button>
+                 <button id="restart-race">Restart</button>
+          </div>        
+
     </section>
 
 <!-- Runner Page -->
@@ -56,6 +66,7 @@
             <div class="submit">
                 <button id="submit-button">Racer Passed</button>
                 <button id="upload-button">Upload Results</button>
+                <p id="every-Participant-Passed">Every participant has passed</p>
             </div>
              <!-- Laps -->
             <div id="lap-list-container">
@@ -65,7 +76,7 @@
 
          <!-- Participant List Popup -->
           <div class="overlay" id="overlay"></div>
-         <div id="participant-list-popup" class="popup">
+        <div id="participant-list-popup" class="popup">
             <div class="popup-content">
 
                 <!-- close popup -->

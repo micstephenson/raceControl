@@ -28,7 +28,6 @@
     // start page*/
     // ------------------------------------------------------------------------------------------------------
     const participants = [];
-    const NoOfParticipants = [];
     const createParticipant = document.getElementById('submit_name');
     const participantListContainer = document.getElementById('participant-list')
     const adminId = '365247';
@@ -101,6 +100,13 @@
         }
     });
     
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            createParticipant.click();
+        }
+    });
+    
     
     // Runner 
     // ------------------------------------------------------------------------------------------------------
@@ -143,47 +149,56 @@
             timer = setInterval(() => {
                 milliseconds += 10;
                 if (milliseconds >= 1000) {
-                    milliseconds = 0; // reset milliseconds
+                    milliseconds = 0; 
                     seconds++;
                 }
                 updateDisplay();
-            }, 10); // update every 10milliseconds
+            }, 10); 
         }
     }
     
     function submitLap(){
         const lapTime = display.textContent;
         const lapDiv = document.createElement('div');
+        const everyParticipantPassed = document.getElementById('every-Participant-Passed');
+        let noOfParticipants = participants.length;
         let lapContainer = document.getElementById('lap-list-container');
     
-        if (!lapContainer) {
-            lapContainer = document.createElement('div');
-            if (!lapContainer.id) {
-                lapContainer.id = 'spectator-lap-list-container';
+        if (position > noOfParticipants) {
+            everyParticipantPassed.classList.add('active');
+            uploadButton.style.backgroundColor = 'green';
+            uploadButton.textContent = 'Upload And Stop Race?';
+        } else {
+            everyParticipantPassed.classList.remove('active');
+            if (!lapContainer) {
+                lapContainer = document.createElement('div');
+                if (!lapContainer.id) {
+                    lapContainer.id = 'lap-list-container';
+                }
+                document.body.appendChild(lapContainer); 
             }
-            document.body.appendChild(lapContainer); 
+    
+            // create new lap entry
+            lapDiv.className = 'lap-entry';
+            lapDiv.setAttribute('data-position', `${position}`); //set data position
+            lapDiv.innerHTML = `
+            <p class="lap-time">Position: ${position}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${lapTime} </p>
+            <p class="participant-selection" data-position="${position}">*No Runner Assigned*</p>
+            <button class="select-time" data-position="${position}"> Select </button>
+            `;
+            lapContainer.appendChild(lapDiv);
+    
+            // append results to a json
+            results.push({position: `${position}`, lap_time: `${lapTime}`, racerName: ` `, racerNum: ` `});
+            console.log(results);
+            localStorage.setItem("stored_results", JSON.stringify(results));
+    
+            position++;        
         }
     
-        // create new lap entry
-        lapDiv.className = 'lap-entry';
-        lapDiv.setAttribute('data-position', `${position}`); //set data position
-        lapDiv.innerHTML = `
-        <p class="lap-time">Position: ${position}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${lapTime} </p>
-        <p class="participant-selection" data-position="${position}">*No Runner Assigned*</p>
-        <button class="select-time" data-position="${position}"> Select </button>
-        `;
-        lapContainer.appendChild(lapDiv);
-    
-        // append results to a json
-        results.push({position: `${position}`, lap_time: `${lapTime}`, racerName: ` `, racerNum: ` `});
-        console.log(results);
-        localStorage.setItem("stored_results", JSON.stringify(results));
-    
-        position++; // Increment position for the next lap
+     
     }
-    // assign user to time POPUP
     
-    // Create Participant list in popup
     function populateParticipantList() {
         const participantListContainer = document.getElementById('participant-list-container');
         participantListContainer.innerHTML = '';
@@ -217,7 +232,6 @@
     
             populateParticipantList();
     
-            // Show the popup
             participantListPopup.classList.add('active');
             overlay.classList.add('active');
         }
