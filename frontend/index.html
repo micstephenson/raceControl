@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StrideSync</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
     <nav class="navbar">
@@ -24,6 +25,7 @@
             </button>
         <!-- Participant Inputs -->
             <div class="input-container">
+                <p id="add-participants-error">Add Participants</p>
                 <h1>Participant Details</h1>
                 <p id="selectFirstLast">Please Enter First AND Last Name</p>
                 <input type="text" id="first_name" class="name" placeholder="Enter your first name" required>
@@ -41,11 +43,17 @@
             </button>
         </div>
 
+        <div id="start-race-popup" class="popup">
+            <!-- close popup -->
+            <button class="close-start-popup">x</button>
+            <h2>Ready To Start The Race?</h2>
+            <button id="start-race">Start</button>
+     </div> 
+
          <!-- Resume or Restart -->
-         <div id="resume-restat-popup" class="popup">
+         <div id="resume-restart-popup" class="popup">
                  <!-- close popup -->
-                 <button class="close-popup">x</button>
- 
+                 <button class="close-resume-restart-popup">x</button>
                  <h2>You still have an active race</h2>
                  <h2>Would you like to restart or resume the current race?</h2>
                  <button id="resume-race">Resume</button>
@@ -67,6 +75,7 @@
                 <button id="submit-button">Racer Passed</button>
                 <button id="upload-button">Upload Results</button>
                 <p id="every-Participant-Passed">Every participant has passed</p>
+                <p id="assign-participant-error">Assign Lap Positions To Participants</p>
             </div>
              <!-- Laps -->
             <div id="lap-list-container">
@@ -100,11 +109,12 @@
 
 <!-- Spectator Page -->
     <section id="spectator-page">
+        <h1>No Results </h1>
         <div id="spectator-lap-list-container">
 
 
-        </div>
 
+        </div>
     </section>
     
     <script src="index.js"></script>

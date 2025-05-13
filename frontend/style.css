@@ -100,6 +100,17 @@ button img:hover {
     }
 }
 
+#add-participants-error {
+    display: none;
+}
+
+#add-participants-error.active {
+    display: block;
+    color: darkgreen;
+    font-size: large;
+    font-weight: bold;
+}
+
 .input-container {
     text-align: center;
     margin-top: 20px;
@@ -205,6 +216,8 @@ button img:hover {
     font-size: 5px;
     cursor: pointer;
 }
+
+
 
 #resume-restat-popup {
     position: fixed; 
@@ -367,6 +380,20 @@ button {
 }
 
 #every-Participant-Passed.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    color: red;
+}
+
+#assign-participant-error {
+    display: none;
+}
+
+#assign-participant-error.active {
     display: flex;
     justify-content: center;
     align-items: center;
