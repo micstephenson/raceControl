@@ -1,0 +1,40 @@
+// document.addEventListener('click', (event) => {
+//     if (event.target.classList.contains('participant-selection-button')) {
+//         event.preventDefault();
+
+//         if (selectedParticipant) {
+//             const participantSelectionElement = document.querySelector('.participant-selection');
+//             if (participantSelectionElement) {
+//                 participantSelectionElement.textContent = `${selectedParticipant.racerNum}              ${selectedParticipant.participantName}`;
+//             }
+
+//             // update results array
+//             const lastResultIndex = results.length - 1;
+//             if (lastResultIndex >= 0) {
+//                 results[lastResultIndex].racerName = selectedParticipant.participantName;
+//                 results[lastResultIndex].racerNum = selectedParticipant.racerNum;
+//             }
+//             console.log(results);
+
+//             // save results to local storage
+//             localStorage.setItem("stored_results", JSON.stringify(results));
+
+//             // Hide the popup
+//             const participantListPopup = document.getElementById('participant-list-popup');
+//             const overlay = document.getElementById('overlay');
+//             participantListPopup.classList.remove('active');
+//             overlay.classList.remove('active');
+
+//             // Clear the selected participant
+//             selectedParticipant = null;
+//         } else {
+//             alert('Please select a participant first.');
+//         }
+//     }
+// });
+
+// const partName = localStorage.getItem('participantName');
+// const number = localStorage.getItem('participantNumber');
+
+// document.getElementById('nameDisplay').innerText = 'Name: ' + partName;
+// document.getElementById('numberDisplay').innerText = 'Number: ' + number; 

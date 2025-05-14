@@ -6,7 +6,7 @@ const app = express();
 app.use(express.static('raceControl'));
 app.use(express.json());
 
-const results = [];
+let results;
 
 function getResults(req, res) {
     res.json(results);
@@ -14,8 +14,10 @@ function getResults(req, res) {
 
 function postResult(req, res) {
     console.log('post request')
-    const runnerResults = req.body;
-    results.push(runnerResults);
+    const runnerResults = req.body;   
+     
+    results = runnerResults
+    // results.push(runnerResults);
 
     console.log('Updated results array:', results);
 
@@ -24,18 +26,20 @@ function postResult(req, res) {
 }
 
 function convertToString(data) {
-    let resultsString = '';
+    let resultsString = 'Position, Name, Racer Number, Lap Time\n';
+    console.log(data);
+    
     if (data.length === 0) {
         return '';
     } else {
         for (let i = 0; i < data.length; i++) {
             const result = data[i];
-            resultsString += `Position: ${result.position || 'N/A'}, Runner: ${result.racerName || 'N/A'}, RacerNum: ${result.racerNum || 'N/A'}, Time: ${result.lap_time || 'N/A'}\n`;
+            resultsString += `${result.position || 'N/A'}, ${result.racerName || 'N/A'}, ${result.racerNum || 'N/A'}, ${result.lap_time || 'N/A'}\n`;
         }
     } return resultsString;
 }
 
-function saveResults(){
+function saveResults(){        
     const csvData = convertToString(results);
     console.log('Generated CSV data:\n', csvData);
     fs.writeFileSync('results.csv', csvData, 'utf8')

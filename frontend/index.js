@@ -3,10 +3,16 @@
 const resumeButton = document.getElementById('resume-race'); 
 const restartButton = document.getElementById('restart-race');
 const closeresumerestart = document.querySelector('.close-resume-restart-popup');
+const startRacePopup = document.getElementById('start-race-popup');
+const closeStartPopup = document.querySelector('.close-start-popup');
+const resumeRestartPopup = document.getElementById('resume-restart-popup');
+
+let started = 0;
 
 resumeButton.addEventListener('click', resumeRace);
 restartButton.addEventListener('click', restartRace);
 closeresumerestart.addEventListener('click', closeresumerestartbutton);
+closeStartPopup.addEventListener('click', closeStart);
 
 
 
@@ -16,21 +22,63 @@ document.querySelector('.runner__button').addEventListener('click', (event) => {
         document.getElementById('add-participants-error').classList.add('active');
     } else {
         document.getElementById('add-participants-error').classList.remove('active');
-        if (!isRunning) {
-            document.getElementById('start-race-popup').classList.add('active');
-            switchPages('main', 'runner');
+        if (!isRunning && (started === 0)) {
+            startRacePopup.classList.add('active');
         } else{
-            document.getElementById('resume-restart-popup').classList.add('active');
+            resumeRestartPopup.classList.add('active');
         }
     }
 });
 
-function resumeRace(){
-    switchPages('main', 'runner');
-    document.getElementById('resume-restart-popup').classList.add('active');
+function closeStart(event){
+    event.preventDefault();
+    startRacePopup.classList.remove('active');
+    startRacePopup.style.display = 'none';
 }
 
-function restartRace(){
+function closeresumerestartbutton(){
+    resumeRestartPopup.classList.remove('active');
+}
+
+function resumeRace(){
+    switchPages('main', 'runner');
+    resumeRestartPopup.classList.remove('active');
+}
+
+function restartRace(event){
+    event.preventDefault();
+    clearAllRaceData();
+    uploadButton.textContent = 'Upload';
+    uploadButton.backgroundColor = '#007bff';
+    submitButton.style.display = 'block';
+    resumeRestartPopup.classList.remove('active');
+    document.getElementById('assign-participant-error').classList.remove('active');
+    document.getElementById('every-Participant-Passed').classList.remove('active');
+    startRacePopup.classList.add('active');
+}
+
+function clearAllRaceData() {
+    const lapContainer = document.getElementById('lap-list-container');
+    if (lapContainer) {
+        lapContainer.innerHTML = ''; 
+        console.log('Lap list container cleared');
+    }
+
+    participants.length = 0;
+
+    // Clear participant list container
+    const participantListContainer = document.getElementById('participants-container');
+    if (participantListContainer) {
+        participantListContainer.innerHTML = ''; 
+        console.log('Participant list container cleared');        
+    }
+
+
+    // Clear results array
+    results.length = 0;
+    console.log('Results cleared:', results);
+
+    // Reset timer variables
     if (isRunning) {
         clearInterval(timer);
         isRunning = false;
@@ -38,38 +86,31 @@ function restartRace(){
     seconds = 0;
     milliseconds = 0;
     updateDisplay();
-    clearLapListContainer();
+    console.log('Timer reset');
+
+    // Reset UI elements
+    const uploadButton = document.getElementById('upload-button');
     uploadButton.textContent = 'Upload';
-    uploadButton.backgroundColor = '#007bff';
-    document.getElementById('resume-restart-popup').classList.remove('active');
-    document.getElementById('assign-participant-error').classList.remove('active');
-    document.getElementById('every-Participant-Passed').classList.remove('active');
-}
+    uploadButton.style.backgroundColor = '#007bff';
+    
 
-function closeresumerestartbutton(){
-    document.getElementById('resume-restart-popup').classList.remove('active');
-}
+    const assignParticipantError = document.getElementById('assign-participant-error');
+    assignParticipantError.classList.remove('active');
 
-function clearLapListContainer() {
-    const lapContainer = document.getElementById('lap-list-container');
-    if (lapContainer) {
-        lapContainer.innerHTML = ''; // Clear all child elements
-        console.log('Lap list container cleared');
-    } else {
-        console.log('Lap list container not found');
-    }
+    const everyParticipantPassed = document.getElementById('every-Participant-Passed');
+    everyParticipantPassed.classList.remove('active');
+
+    console.log('All race data cleared');    
 }
 
 document.querySelector('.navbar__name').addEventListener('click', (event) => {
     event.preventDefault(); 
-
-    switchPages('runner', 'main')
+    switchPages('runner', 'main');
 });
 
 document.querySelector('.spectator__button').addEventListener('click', (event) => {
     event.preventDefault(); 
-
-    switchPages('main', 'spectator')
+    switchPages('main', 'spectator');
 });
 
 function switchPages(currentPage, nextPage){ 
@@ -82,9 +123,6 @@ function switchPages(currentPage, nextPage){
 const participants = [];
 const createParticipant = document.getElementById('submit_name');
 const participantListContainer = document.getElementById('participant-list')
-const adminId = '365247';
-
-//
 
 //capitalise names
 function capFirstLetter(string){
@@ -176,8 +214,10 @@ function updateDisplay() {
     display.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(millis).padStart(2, '0')}`;
 }
 
-function startTimer(){
+function startTimer(event){
+    event.preventDefault();
     document.getElementById('start-race-popup').classList.remove('active');
+    started += 1;
     if (!isRunning) {
         isRunning = true;
         timer = setInterval(() => {
@@ -350,7 +390,7 @@ function uploadResults(){
 
     if (uploadAllowed) {
         submitButton.style.display = 'none';
-        uploadButton.textContent = 'Uploaded!'
+        uploadButton.textContent = 'Uploaded!';
         document.getElementById('assign-participant-error').classList.remove('active');
         document.getElementById('every-Participant-Passed').classList.remove('active');
         storeResults();
@@ -385,9 +425,8 @@ function filterParticipants(event) {
         }
     });
 }
-// Results Page
-// ------------------------------------------------------------------------------------------------------
 
+// Results Page
 
 // Store Results  
 // ------------------------------------------------------------------------------------------------------
@@ -399,23 +438,25 @@ function filterParticipants(event) {
     });
 
     if (response.ok) {
-        message.value = '';
         const updatedResults = await response.json();
-        removeContentFrom(resultsList);
-        showMessages(updatedMessages, resultsList);
+        removeContentFrom(results);
     } else {
         console.log('failed to upload results', response);
     }
  }
 
  async function loadResults() {
-    const response = await fetch('messages');
+    const response = await fetch('results');
     let results;
     if (response.ok) {
         results = await response.json();
     } else {
-        results = ['failed to load results']
+        results = ['failed to load results'];
     }
+ }
+
+ function removeContentFrom(content){
+    results.length = 0;
  }
 
  // Airplane Mode  

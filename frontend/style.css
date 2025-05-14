@@ -20,8 +20,8 @@
 }
 
 .navbar__container {
-    background-color: #ff8177;
-    background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+    background-color: #77a2ff;
+    background-image: linear-gradient(to top, #2108ff 0%, #99daff 100%);
     background-size: 100%;
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -89,14 +89,21 @@ button img:hover {
     .runner__button,
     .spectator__button {
         flex: 1 1 auto; 
-        max-width: 45%; 
         text-align: center;
+        justify-content: center;
+        align-items: center;
     }
 
     .input-container {
         margin-top: 20px; 
         width: 100%; 
         text-align: center; 
+    }
+
+    .runner__button img,
+    .spectator__button img {
+        max-width: 100%;
+        height: auto;
     }
 }
 
@@ -511,3 +518,21 @@ button {
 }
 
 /* Results page */
+/* #spectator-page {
+    display: none;
+}
+
+#submit-results, #spectator-lap-list-container, #spectator-lap-list-container {
+    display: none;
+}
+
+#spectator-page h1 {
+    display: block;
+    font-family: 'Courier New', Courier, monospace;
+    align-items: center;
+    color: white;
+}
+
+#spectator-lap-list-container {
+    display: block;
+} */
